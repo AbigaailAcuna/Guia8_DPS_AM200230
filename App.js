@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
-import Formulario from './src/components/Formulario'
-import Pais from './src/components/pais'
+import Formulario from './src/components/Formulario';
+import Pais from './src/components/pais';
 
 export default function App() {
-  const [busqueda, guardarbusqueda] = useState({ pais: '',});
+  const [busqueda, guardarbusqueda] = useState({
+    pais: '',
+  });
   const [consultar, guardarconsultar] = useState(false);
   const [resultado, guardarresultado] = useState({});
+  
   useEffect(() => {
-    const { pais } = busqueda;
+  const { pais } = busqueda;
     const consultarPais = async () => {
       if (consultar) {
-        const url =
-          `https://servicodados.ibge.gov.br/api/v1/paises/${pais}`;
+        const url = `https://servicodados.ibge.gov.br/api/v1/paises/${pais}`;
         try {
           const respuesta = await fetch(url);
           const resultado = await respuesta.json();
           guardarresultado(resultado);
+          console.log(resultado);
           guardarconsultar(false);
         } catch (error) {
           mostrarAlerta();
@@ -24,15 +27,17 @@ export default function App() {
       }
     };
     consultarPais();
-  }, [busqueda, consultar]);
+  },[consultar]);
 
   const mostrarAlerta = () => {
     Alert.alert('Error', 'No hay resultado intenta con otra ciudad o país'),
       [{ Text: 'Ok' }];
   };
+
   return (
     <View style={styles.app}>
       <View style={styles.contenido}>
+        
         <Formulario
           busqueda={busqueda}
           guardarbusqueda={guardarbusqueda}
@@ -43,6 +48,7 @@ export default function App() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   app: {
     flex: 1,
